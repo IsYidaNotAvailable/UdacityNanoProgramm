@@ -212,6 +212,7 @@ string LinuxParser::User(int pid) {
       }
     }
   }
+  return s_user;
 }
 
 
