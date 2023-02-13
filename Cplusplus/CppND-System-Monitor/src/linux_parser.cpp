@@ -79,18 +79,17 @@ long LinuxParser::UpTime(int pid) {
   string value;
   vector<string> values;
   
-  if (pid == -1) {
-    std::ifstream stream(kProcDirectory + kUptimeFilename);
-    if (stream.is_open()) {
-      std::getline(stream, line_uptime);
-      std::istringstream linestream(line_uptime);
-      linestream >> uptime_total >> uptime_idle;
-    }
+  std::ifstream stream1(kProcDirectory + kUptimeFilename);
+  if (stream1.is_open()) {
+    std::getline(stream1, line_uptime);
+    std::istringstream linestream(line_uptime);
+    linestream >> uptime_total >> uptime_idle;
   }
-  else {
-    std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
-    if (stream.is_open()) {
-      std::getline(stream, line_uptime);
+
+  if (pid != -1) {
+    std::ifstream stream2(kProcDirectory + to_string(pid) + kStatFilename);
+    if (stream2.is_open()) {
+      std::getline(stream2, line_uptime);
       std::istringstream linestream(line_uptime);
       while (linestream >> value) {
         values.emplace_back(value);
@@ -98,6 +97,7 @@ long LinuxParser::UpTime(int pid) {
       return std::stol(values[21])/sysconf(_SC_CLK_TCK) - std::stol(uptime_total);
     }
   }
+  
   return std::stol(uptime_total);
 }
 
