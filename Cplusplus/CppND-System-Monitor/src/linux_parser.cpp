@@ -95,7 +95,7 @@ long LinuxParser::UpTime(int pid) {
       while (linestream >> value) {
         values.emplace_back(value);
       }
-      return stol(values[21])/sysconf(_SC_CLK_TCK);
+      return std::stol(values[21])/sysconf(_SC_CLK_TCK) - std::stol(uptime_total);
     }
   }
   return std::stol(uptime_total);
